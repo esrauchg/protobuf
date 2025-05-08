@@ -882,6 +882,36 @@ const char* DeclaredTypeMethodName(FieldDescriptor::Type type) {
   return "";
 }
 
+absl::string_view DeclaredCppTypeMethodName(FieldDescriptor::CppType type) {
+  switch (type) {
+    case FieldDescriptor::CPPTYPE_INT32:
+      return "Int32";
+    case FieldDescriptor::CPPTYPE_INT64:
+      return "Int64";
+    case FieldDescriptor::CPPTYPE_UINT32:
+      return "UInt32";
+    case FieldDescriptor::CPPTYPE_UINT64:
+      return "UInt64";
+    case FieldDescriptor::CPPTYPE_DOUBLE:
+      return "Double";
+    case FieldDescriptor::CPPTYPE_FLOAT:
+      return "Float";
+    case FieldDescriptor::CPPTYPE_BOOL:
+      return "Bool";
+    case FieldDescriptor::CPPTYPE_ENUM:
+      return "Enum";
+    case FieldDescriptor::CPPTYPE_STRING:
+      return "String";
+    case FieldDescriptor::CPPTYPE_MESSAGE:
+      return "Message";
+
+      // No default because we want the compiler to complain if any new
+      // types are added.
+  }
+  ABSL_LOG(FATAL) << "Can't get here.";
+  return "";
+}
+
 std::string Int32ToString(int number) {
   if (number == std::numeric_limits<int32_t>::min()) {
     // This needs to be special-cased, see explanation here:
@@ -1305,6 +1335,10 @@ bool HasMapFields(const FileDescriptor* file) {
 
 bool IsV2EnabledForMessage(const Descriptor* descriptor,
                            const Options& options) {
+  return false;
+}
+
+bool IsEligibleForV2Batching(const FieldDescriptor* field) {
   return false;
 }
 
